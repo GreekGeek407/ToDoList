@@ -37,6 +37,13 @@ class ToDoViewModel : ViewModel() {
         taskList.remove(task)
     }
 
+    fun moveToBottom(task: Task) {
+        val isCompleted = task.completed
+        deleteTask(task)
+        addTask(task.body)
+        if (isCompleted)
+            toggleTaskCompleted(taskList[taskList.size - 1])
+    }
     fun toggleTaskCompleted(task: Task) {
         val index = taskList.indexOf(task)
         taskList[index] = taskList[index].copy(completed = !task.completed)

@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -76,19 +77,19 @@ fun ToDoScreen(modifier: Modifier = Modifier, toDoViewModel: ToDoViewModel = vie
                         )
                     }
                     IconButton(
-                        onClick = { toDoViewModel.clearCompletedTasks() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Clear list"
-                        )
-                    }
-                    IconButton(
                         onClick = { toDoViewModel.uncheckAllTasks() }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Remove all checks"
+                        )
+                    }
+                    IconButton(
+                        onClick = { toDoViewModel.clearCompletedTasks() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Clear list"
                         )
                     }
                 }
@@ -127,6 +128,9 @@ fun ToDoScreen(modifier: Modifier = Modifier, toDoViewModel: ToDoViewModel = vie
                             if (it == SwipeToDismissBoxValue.StartToEnd) {
                                 toDoViewModel.deleteTask(currentTask)
                                 true
+                            } else if (it == SwipeToDismissBoxValue.EndToStart) {
+                                toDoViewModel.moveToBottom(currentTask)
+                                false
                             } else
                                 false
                         }
@@ -149,6 +153,8 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
     val color =
         if (dismissState.dismissDirection == SwipeToDismissBoxValue.StartToEnd)
             Color.Red
+        else if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart)
+            Color.Blue
         else
             Color.Transparent
     Row(
@@ -162,6 +168,13 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState, modifier: Modifier = M
                 Icons.Default.Delete,
                 contentDescription = "Delete",
                 modifier = Modifier.padding(8.dp)
+            )
+        else if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart)
+            Icon(
+                Icons.Default.KeyboardArrowDown,
+                contentDescription = "Move item to bottom of list",
+                modifier = Modifier.padding(start = 370.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+
             )
     }
 }
